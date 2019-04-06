@@ -1,6 +1,6 @@
 import asyncio
-import time
 import curses
+import time
 
 
 async def blink(canvas, row, column, symbol='*'):
@@ -25,12 +25,18 @@ async def blink(canvas, row, column, symbol='*'):
 def main(canvas):
     curses.curs_set(False)
     canvas.border()
-    row, column = (5, 20)
-
-    coro = blink(canvas, row, column, symbol='*')
+    row = 5
+    coroutines = [blink(canvas, row, column) for column in range(20, 45, 5)]
 
     while True:
-        coro.send(None)
+        for coro in coroutines:
+            try:
+                coro.send(None)
+            except StopIteration:
+                coroutines.remove(coro)
+        if len(coroutines) == 0:
+            break
+
         time.sleep(1)
 
 
