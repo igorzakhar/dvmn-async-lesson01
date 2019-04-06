@@ -3,6 +3,7 @@ import curses
 
 
 def draw(canvas):
+    canvas.border()
     row, column = (5, 20)
     canvas.addstr(row, column, 'Hello, World!')
     canvas.refresh()
