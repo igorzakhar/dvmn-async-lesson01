@@ -29,10 +29,9 @@ def main(canvas):
 
     coro = blink(canvas, row, column, symbol='*')
 
-    coro.send(None)
-    coro.send(None)
-    coro.send(None)
-    time.sleep(10)
+    while True:
+        coro.send(None)
+        time.sleep(1)
 
 
 if __name__ == '__main__':
