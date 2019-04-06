@@ -8,26 +8,35 @@ TIC_TIMEOUT = 0.1
 
 
 async def blink(canvas, row, column, symbol='*'):
+    offset = random.randint(0, 3)
     while True:
-        canvas.addstr(row, column, symbol, curses.A_DIM)
-        canvas.refresh()
-        for tic in range(20):
-            await asyncio.sleep(0)
+        if offset == 0:
+            canvas.addstr(row, column, symbol, curses.A_DIM)
+            canvas.refresh()
+            for tic in range(20):
+                await asyncio.sleep(0)
+            offset += 1
 
-        canvas.addstr(row, column, symbol)
-        canvas.refresh()
-        for tic in range(3):
-            await asyncio.sleep(0)
+        if offset == 1:
+            canvas.addstr(row, column, symbol)
+            canvas.refresh()
+            for tic in range(3):
+                await asyncio.sleep(0)
+            offset += 1
 
-        canvas.addstr(row, column, symbol, curses.A_BOLD)
-        canvas.refresh()
-        for tic in range(5):
-            await asyncio.sleep(0)
+        if offset == 2:
+            canvas.addstr(row, column, symbol, curses.A_BOLD)
+            canvas.refresh()
+            for tic in range(5):
+                await asyncio.sleep(0)
+            offset += 1
 
-        canvas.addstr(row, column, symbol)
-        canvas.refresh()
-        for tic in range(3):
-            await asyncio.sleep(0)
+        if offset == 3:
+            canvas.addstr(row, column, symbol)
+            canvas.refresh()
+            for tic in range(3):
+                await asyncio.sleep(0)
+            offset = 0
 
 
 def stars_generator(height, width, number=50):
