@@ -3,23 +3,30 @@ import curses
 import time
 
 
+TIC_TIMEOUT = 0.1
+
+
 async def blink(canvas, row, column, symbol='*'):
     while True:
         canvas.addstr(row, column, symbol, curses.A_DIM)
         canvas.refresh()
-        await asyncio.sleep(0)
+        for tic in range(20):
+            await asyncio.sleep(0)
 
         canvas.addstr(row, column, symbol)
         canvas.refresh()
-        await asyncio.sleep(0)
+        for tic in range(3):
+            await asyncio.sleep(0)
 
         canvas.addstr(row, column, symbol, curses.A_BOLD)
         canvas.refresh()
-        await asyncio.sleep(0)
+        for tic in range(5):
+            await asyncio.sleep(0)
 
         canvas.addstr(row, column, symbol)
         canvas.refresh()
-        await asyncio.sleep(0)
+        for tic in range(3):
+            await asyncio.sleep(0)
 
 
 def main(canvas):
@@ -37,7 +44,7 @@ def main(canvas):
         if len(coroutines) == 0:
             break
 
-        time.sleep(1)
+        time.sleep(TIC_TIMEOUT)
 
 
 if __name__ == '__main__':
