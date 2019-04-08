@@ -4,9 +4,15 @@ import random
 import time
 
 from fire_animation import fire
+from animation import animation_frames
 
 
 TIC_TIMEOUT = 0.1
+
+
+def load_frame_from_file(filename):
+    with open(filename, 'r') as fd:
+        return fd.read()
 
 
 async def blink(canvas, row, column, symbol='*'):
@@ -63,6 +69,24 @@ def main(canvas):
     start_col = width / 2
     coro_shot = fire(canvas, start_row, start_col)
     coroutines.append(coro_shot)
+
+    rocket_frame_1 = load_frame_from_file(
+        'anim_frames/rocket/rocket_frame_1.txt'
+    )
+    rocket_frame_2 = load_frame_from_file(
+        'anim_frames/rocket/rocket_frame_2.txt'
+    )
+
+    rocket_frames = (rocket_frame_1, rocket_frame_2)
+
+    start_rocket_row = height / 2
+    coro_rocket_anim = animation_frames(
+        canvas,
+        start_rocket_row,
+        start_col,
+        rocket_frames
+    )
+    coroutines.append(coro_rocket_anim)
 
     while True:
         canvas.refresh()
