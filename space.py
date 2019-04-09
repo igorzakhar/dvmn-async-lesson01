@@ -53,6 +53,20 @@ def stars_generator(height, width, number=50):
         yield y_pos, x_pos, symbol
 
 
+def event_loop(coroutines):
+    while True:
+        index = 0
+        while index < len(coroutines):
+            coro = coroutines[index]
+            try:
+                coro.send(None)
+            except StopIteration:
+                coroutines.remove(coro)
+            index += 1
+
+        time.sleep(TIC_TIMEOUT)
+
+
 def main(canvas):
     curses.curs_set(False)
     canvas.border()
@@ -86,19 +100,9 @@ def main(canvas):
     )
     coroutines.append(coro_rocket_anim)
 
-    while True:
-        canvas.refresh()
-        index = 0
-        while index < len(coroutines):
-            coro = coroutines[index]
-            try:
-                coro.send(None)
-            except StopIteration:
-                coroutines.remove(coro)
-            index += 1
+    canvas.refresh()
 
-        time.sleep(TIC_TIMEOUT)
-
+    event_loop(coroutines)
 
 if __name__ == '__main__':
     curses.update_lines_cols()
