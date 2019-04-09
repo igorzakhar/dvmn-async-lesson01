@@ -15,35 +15,33 @@ def load_frame_from_file(filename):
         return fd.read()
 
 
+async def go_to_sleep(seconds):
+    iteration_count = int(seconds * 10)
+    for _ in range(iteration_count):
+        await asyncio.sleep(0)
+
+
 async def blink(canvas, row, column, symbol='*'):
     offset = random.randint(0, 3)
     while True:
         if offset == 0:
             canvas.addstr(row, column, symbol, curses.A_DIM)
-
-            for tic in range(20):
-                await asyncio.sleep(0)
+            await go_to_sleep(2)
             offset += 1
 
         if offset == 1:
             canvas.addstr(row, column, symbol)
-
-            for tic in range(3):
-                await asyncio.sleep(0)
+            await go_to_sleep(0.3)
             offset += 1
 
         if offset == 2:
             canvas.addstr(row, column, symbol, curses.A_BOLD)
-
-            for tic in range(5):
-                await asyncio.sleep(0)
+            await go_to_sleep(0.5)
             offset += 1
 
         if offset == 3:
             canvas.addstr(row, column, symbol)
-
-            for tic in range(3):
-                await asyncio.sleep(0)
+            await go_to_sleep(0.3)
             offset = 0
 
 
