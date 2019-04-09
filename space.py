@@ -5,7 +5,7 @@ import random
 import time
 
 from fire_animation import fire
-from curses_tools import draw_frame, get_frame_size
+from curses_tools import draw_frame, get_frame_size, read_controls
 
 
 TIC_TIMEOUT = 0.1
@@ -56,13 +56,22 @@ def stars_generator(height, width, number=50):
 
 async def animation_frames(canvas, start_row, start_column, frames):
     frames_cycle = itertools.cycle(frames)
-
+    start_anim = True
+    
     while True:
         current_frame = next(frames_cycle)
+        
+        if start_anim:
+            frame_size_y, frame_size_x = get_frame_size(current_frame)
+            frame_pos_x = round(start_column) - round(frame_size_x / 2)
+            frame_pos_y = round(start_row) - round(frame_size_y / 2)
 
-        frame_size_y, frame_size_x = get_frame_size(current_frame)
-        frame_pos_x = round(start_column) - round(frame_size_x / 2)
-        frame_pos_y = round(start_row) - round(frame_size_y / 2)
+            start_anim = False
+
+        direction_y, direction_x, _ = read_controls(canvas)
+
+        frame_pos_x += direction_x
+        frame_pos_y += direction_y
 
         draw_frame(canvas, frame_pos_y, frame_pos_x, current_frame)
         canvas.refresh()
@@ -76,6 +85,7 @@ async def animation_frames(canvas, start_row, start_column, frames):
             current_frame,
             negative=True
         )
+
 
 
 def event_loop(coroutines):
@@ -95,6 +105,8 @@ def event_loop(coroutines):
 def main(canvas):
     curses.curs_set(False)
     canvas.border()
+    canvas.nodelay(True)
+
     height, width = canvas.getmaxyx()
 
     coroutines = [
