@@ -1,10 +1,11 @@
 import asyncio
 import curses
+import itertools
 import random
 import time
 
 from fire_animation import fire
-from animation import animation_frames
+from curses_tools import draw_frame, get_frame_size
 
 
 TIC_TIMEOUT = 0.1
@@ -51,6 +52,30 @@ def stars_generator(height, width, number=50):
         x_pos = random.randint(1, width - 2)
         symbol = random.choice(['+', '*', '.', ':'])
         yield y_pos, x_pos, symbol
+
+
+async def animation_frames(canvas, start_row, start_column, frames):
+    frames_cycle = itertools.cycle(frames)
+
+    while True:
+        current_frame = next(frames_cycle)
+
+        frame_size_y, frame_size_x = get_frame_size(current_frame)
+        frame_pos_x = round(start_column) - round(frame_size_x / 2)
+        frame_pos_y = round(start_row) - round(frame_size_y / 2)
+
+        draw_frame(canvas, frame_pos_y, frame_pos_x, current_frame)
+        canvas.refresh()
+
+        await go_to_sleep(0.3)
+
+        draw_frame(
+            canvas,
+            frame_pos_y,
+            frame_pos_x,
+            current_frame,
+            negative=True
+        )
 
 
 def event_loop(coroutines):
@@ -103,6 +128,7 @@ def main(canvas):
     canvas.refresh()
 
     event_loop(coroutines)
+
 
 if __name__ == '__main__':
     curses.update_lines_cols()
