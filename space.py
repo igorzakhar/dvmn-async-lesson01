@@ -54,7 +54,7 @@ def stars_generator(height, width, number=50):
         yield y_pos, x_pos, symbol
 
 
-async def animation_frames(canvas, start_row, start_column, frames):
+async def animate_frames(canvas, start_row, start_column, frames):
     frames_cycle = itertools.cycle(frames)
     height, width = canvas.getmaxyx()
     start_anim = True
@@ -103,7 +103,7 @@ async def animation_frames(canvas, start_row, start_column, frames):
         )
 
 
-def event_loop(coroutines):
+def run_event_loop(coroutines):
     while True:
         index = 0
         while index < len(coroutines):
@@ -144,7 +144,7 @@ def main(canvas):
     rocket_frames = (rocket_frame_1, rocket_frame_2)
 
     start_rocket_row = height / 2
-    coro_rocket_anim = animation_frames(
+    coro_rocket_anim = animate_frames(
         canvas,
         start_rocket_row,
         start_col,
@@ -154,7 +154,7 @@ def main(canvas):
 
     canvas.refresh()
 
-    event_loop(coroutines)
+    run_event_loop(coroutines)
 
 
 if __name__ == '__main__':
