@@ -22,8 +22,7 @@ async def go_to_sleep(seconds):
         await asyncio.sleep(0)
 
 
-async def blink(canvas, row, column, symbol='*'):
-    offset = random.randint(0, 3)
+async def blink(canvas, row, column, symbol='*', offset=1):
     while True:
         if offset == 0:
             canvas.addstr(row, column, symbol, curses.A_DIM)
@@ -125,7 +124,7 @@ def main(canvas):
     height, width = canvas.getmaxyx()
 
     coroutines = [
-        blink(canvas, row, column, symbol)
+        blink(canvas, row, column, symbol, random.randint(0, 3))
         for row, column, symbol in stars_generator(height, width)
     ]
 
